@@ -2,15 +2,11 @@
 This project provides a professional overview of the Go REST API, describing its purpose, architecture, and endpoints. The Go REST API is a web service designed to handle CRUD (Create, Read, Update, Delete) operations efficiently.
 
 _**Key Features**_
-- Scalability: Designed to handle high traffic efficiently.
-- Performance: Makes use of Go's concurrency model to handle requests more quickly.
-- Security: Implements authentication and authorization mechanisms.
-- implicity: Follows REST principles, ensuring easy integration.
-- Tests for POST, GET, PUT, PATCH, and DELETE requests
-- Collection of tests
-- Environment set up for easy switching between environments
-- Pre-request script for data setup
-- Test scripts for all assertions and validations
+- Comprehensive tests for POST, GET, PUT, PATCH, and DELETE requests  
+- Organized collection of test cases  
+- Configured environment setup to enable seamless switching between different environments  
+- Pre-request scripts to prepare data before execution  
+- Test scripts for thorough assertions and validations  
 
 ### **Technology used:**
 - Postman
@@ -343,4 +339,4 @@ newman run Go_Rest_API.postman_collection.json -e go_rest_env.postman_environmen
 
 ## Contact
 For questions or support, contact the development team at:
-Email: **nazrul15-7255@diu.edu.bd**
+Email: _**nazrul15-7255@diu.edu.bd**_
