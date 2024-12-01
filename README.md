@@ -323,6 +323,24 @@ pm.test("Unset user_id after deletion", function () {
     console.log("User ID has been unset after deletion.");
 });
 ```
+## Run Command:  
+- Run Command for Console: 
+```console 
+newman run Go_Rest_API.postman_collection.json -e go_rest_env.postman_environment.json 
+```
+- Run Command for Report: 
+```console 
+newman run Go_Rest_API.postman_collection.json -e go_rest_env.postman_environment.json -r cli,htmlextra 
+```
+- Run Command for Report with three iteration:
+``` console
+newman run Go_Rest_API.postman_collection.json -e go_rest_env.postman_environment.json -r cli,htmlextra -n 3
+```
+## Newman Report
+![image](https://github.com/user-attachments/assets/973d8251-4ee2-4d18-b3b0-72662f993f39)
+![image](https://github.com/user-attachments/assets/38c57a64-f8e4-48dd-8bc6-5175960ef79a)
+
+
 ## Contact
 For questions or support, contact the development team at:
 Email: **nazrul15-7255@diu.edu.bd**
