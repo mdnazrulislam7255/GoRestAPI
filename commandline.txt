@@ -1,0 +1,1 @@
+newman run Go_Rest_API.postman_collection.json -e go_rest_env.postman_environment.json -r cli,htmlextra -n 3

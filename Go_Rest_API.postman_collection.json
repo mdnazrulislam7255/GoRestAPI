@@ -1,0 +1,399 @@
+{
+	"info": {
+		"_postman_id": "f46774f6-bc04-4ca1-82cd-febbdfab934e",
+		"name": "Go_Rest_API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "34581577"
+	},
+	"item": [
+		{
+			"name": "Create User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var json_data= pm.response.json();\r",
+							"pm.environment.set(\"id\",json_data.id);\r",
+							"var userID = pm.environment.get(\"id\");\r",
+							"if (userID === json_data.id) {\r",
+							"    pm.test(\"A new user is created successfully\", function () {\r",
+							"        pm.response.to.have.status(201);\r",
+							"    });\r",
+							"}\r",
+							"else{\r",
+							"     pm.test(\" Request is failed\", function () {\r",
+							"        pm.response.to.have.status(404);\r",
+							"    });\r",
+							"}\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"\r",
+							"var name= pm.variables.replaceIn(\"{{$randomFullName}}\");\r",
+							"pm.environment.set(\"name_env\",name);\r",
+							"\r",
+							"var email= pm.variables.replaceIn(\"{{$randomEmail}}\");\r",
+							"pm.environment.set(\"email_env\", email);\r",
+							"\r",
+							"let genders = [\"male\", \"female\"];\r",
+							"let statuses = [\"active\", \"inactive\"];\r",
+							"let randomGender = genders[Math.floor(Math.random() * genders.length)];\r",
+							"let randomStatus = statuses[Math.floor(Math.random() * statuses.length)];\r",
+							"pm.environment.set(\"gender_env\", randomGender);\r",
+							"pm.environment.set(\"status_env\", randomStatus);\r",
+							"\r",
+							"console.log(`Generated Name: ${name}`);\r",
+							"console.log(`Generated Email: ${email}`);\r",
+							"console.log(`Generated Gender: ${randomGender}`);\r",
+							"console.log(`Generated Status: ${randomStatus}`);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"{{name_env}}\",\r\n    \"gender\": \"{{gender_env}}\",\r\n    \"email\": \"{{email_env}}\",\r\n    \"status\": \"{{status_env}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{gorest-url}}//public/v2/users",
+					"host": [
+						"{{gorest-url}}"
+					],
+					"path": [
+						"",
+						"public",
+						"v2",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User List",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var statusCode = pm.response.code;\r",
+							"console.log(statusCode);\r",
+							"switch (statusCode) {\r",
+							"    case 200:\r",
+							"        var json_data = pm.response.json();\r",
+							"\r",
+							"        pm.test(\"Check Status code 200 OK\", function () {\r",
+							"            pm.response.to.have.status(200);\r",
+							"        });\r",
+							"\r",
+							"        pm.test(\"Check Name\", function () {\r",
+							"            pm.expect(json_data.name).to.equal(pm.environment.get(\"name_env\"));\r",
+							"        });\r",
+							"        pm.test(\"Check Email\", function () {\r",
+							"            pm.expect(json_data.email).to.equal(pm.environment.get(\"email_env\"));\r",
+							"        });\r",
+							"        pm.test(\"Check Gender\", function () {\r",
+							"            pm.expect(json_data.gender).to.equal(pm.environment.get(\"gender_env\"));\r",
+							"        });\r",
+							"\r",
+							"        pm.test(\"Check Status\", function () {\r",
+							"            pm.expect(json_data.status).to.equal(pm.environment.get(\"status_env\"));\r",
+							"        });\r",
+							"        break;\r",
+							"\r",
+							"    case 404:\r",
+							"        pm.test(\"Something went wrong/Not found\");\r",
+							"        break;\r",
+							"\r",
+							"    case 500:\r",
+							"        pm.test(\"Something went wrong\");\r",
+							"        break;\r",
+							"\r",
+							"    default:\r",
+							"\r",
+							"}\r",
+							"\r",
+							"pm.test(\"Response time is less than 800ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(800);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Content-Type is present\", function () {\r",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json; charset=utf-8')\r",
+							"});\r",
+							"//Data types\r",
+							"pm.test(\"Test the data type of email is a string\", () => {\r",
+							"    pm.expect(json_data.email).to.be.a(\"string\");\r",
+							"});\r",
+							"pm.test(\"Test the data type of status is a string\", () => {\r",
+							"    pm.expect(json_data.status).to.be.a(\"string\");\r",
+							"});\r",
+							"// Get the 'name' from the response\r",
+							"let name = pm.response.json().name;\r",
+							"pm.test(\"Name should be a valid string with no numbers or special characters\", function () {\r",
+							"    pm.expect(typeof name).to.eql(\"string\");\r",
+							"    const namePattern = /^[A-Za-z\\s]+$/;\r",
+							"    pm.expect(namePattern.test(name)).to.be.true;\r",
+							"    console.log(`Validated Name: ${name}`);\r",
+							"});\r",
+							"// Get the 'status' from the response\r",
+							"let status = pm.response.json().status;\r",
+							"pm.test(\"Status should be a valid string with no numbers or special characters\", function () {\r",
+							"    pm.expect(typeof status).to.eql(\"string\");\r",
+							"    const namePattern = /^[A-Za-z\\s]+$/;\r",
+							"    pm.expect(namePattern.test(name)).to.be.true;\r",
+							"    console.log(`Validated Name: ${status}`);\r",
+							"});\r",
+							"let gender = pm.response.json().gender;\r",
+							"pm.test(\"Gender should be a valid string with no numbers or special characters\", function () {\r",
+							"    pm.expect(typeof gender).to.eql(\"string\");\r",
+							"    const namePattern = /^[A-Za-z\\s]+$/;\r",
+							"    pm.expect(namePattern.test(name)).to.be.true;\r",
+							"    console.log(`Validated Name: ${gender}`);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{gorest-url}}//public/v2/users/{{id}}",
+					"host": [
+						"{{gorest-url}}"
+					],
+					"path": [
+						"",
+						"public",
+						"v2",
+						"users",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Check if data update is allowed\", function () {\r",
+							"    let updateAllowed = pm.environment.get(\"updateAllowed\");\r",
+							"    pm.expect(updateAllowed).to.eql(\"true\", \"Data update not allowed due to validation failure.\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Extracting the values from environment variables or request data\r",
+							"let name = pm.variables.replaceIn(\"{{name_env}}\");\r",
+							"let gender = pm.variables.replaceIn(\"{{gender_env}}\");\r",
+							"\r",
+							"// Regex patterns to ensure no special characters or numbers\r",
+							"const namePattern = /^[A-Za-z\\s]+$/;\r",
+							"const genderPattern = /^[A-Za-z]+$/;\r",
+							"// Validation logic\r",
+							"let isNameValid = namePattern.test(name);\r",
+							"let isGenderValid = genderPattern.test(gender);\r",
+							"\r",
+							"// If any of the fields are invalid, throw an error and stop the request\r",
+							"if (!isNameValid || !isGenderValid) {\r",
+							"    pm.environment.set(\"updateAllowed\", \"false\");\r",
+							"    pm.error(\"Validation failed. Name or Gender,contains invalid characters.\");\r",
+							"} else {\r",
+							"    pm.environment.set(\"updateAllowed\", \"true\");\r",
+							"    pm.environment.set(\"name_env\", name);\r",
+							"    pm.environment.set(\"gender_env\", gender);\r",
+							"}\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \" {{name_env}}\",\r\n    \"email\": \"{{email_env}}\",\r\n    \"gender\": \"{{gender_env}}\",\r\n    \"status\": \"active\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{gorest-url}}//public/v2/users/{{id}}",
+					"host": [
+						"{{gorest-url}}"
+					],
+					"path": [
+						"",
+						"public",
+						"v2",
+						"users",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Partially update user",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"bully anny\",\r\n    \"status\": \"inactive\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{gorest-url}}//public/v2/users/{{id}}",
+					"host": [
+						"{{gorest-url}}"
+					],
+					"path": [
+						"",
+						"public",
+						"v2",
+						"users",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Status code is 204 (No Content)\", function () {\r",
+							"    pm.response.to.have.status(204);\r",
+							"});\r",
+							"pm.test(\"Unset user_id after deletion\", function () {\r",
+							"    pm.environment.unset(\"id\");\r",
+							"\r",
+							"    pm.expect(pm.environment.get(\"id\")).to.be.undefined;\r",
+							"\r",
+							"    console.log(\"User ID has been unset after deletion.\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"let userId = pm.environment.get(\"id\");\r",
+							"\r",
+							"if (!userId) {\r",
+							"    console.error(\"No user ID found.\");\r",
+							"    postman.setNextRequest(null);\r",
+							"}\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{gorest-url}}//public/v2/users/{{id}}",
+					"host": [
+						"{{gorest-url}}"
+					],
+					"path": [
+						"",
+						"public",
+						"v2",
+						"users",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "fa169e1336c27a986a48660afc597ede875dbe07171318b8532f68e64f12baf5",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
