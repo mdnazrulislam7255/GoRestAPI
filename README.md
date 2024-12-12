@@ -60,6 +60,10 @@ _**Authentication**_
 **Token value: _fa169e1336c27a986a48660afc597ede875dbe07171318b8532f68e64f12baf5_**
 ### Screenshot: ![image](https://github.com/user-attachments/assets/a0d3aee3-b14f-4de5-93f2-f07ec4d282fc)
 
+**Note**: Generate your own token from this site: https://gorest.co.in/consumer/login  <br>
+1. At first login <br>
+2. Generate a token for using it. <br>
+
 
 ## **Testing**
 
