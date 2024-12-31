@@ -342,5 +342,5 @@ newman run Go_Rest_API.postman_collection.json -e go_rest_env.postman_environmen
 
 
 ## Contact
-For questions or support, contact the development team at:
+For questions or support, contact at:
 Email: _**nazrul15-7255@diu.edu.bd**_
